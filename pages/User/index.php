@@ -95,7 +95,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["submit"]) {
   // print_r($_POST);
   // echo '</pre>';
 
-  $_SESSION['rainbow_uid'] = 1; // to be modified after
+  $_SESSION['rainbow_uid'] = 5; // to be modified after
 
   # We get the user
   $student_id = $_SESSION['rainbow_uid'];
@@ -200,7 +200,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["submit"]) {
           foreach($moreResponsesUser as $response){
             if(in_array($response,$moreResponses)){
               $is_correct = true;
-              $noteUser = $noteUser + 1;
+              $noteUser <= $countQuestions ? $noteUser++ : null;
             }
           }
           // echo '<pre>';
@@ -213,7 +213,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["submit"]) {
         }else{
           if(in_array(strtolower($r),$moreResponses)){
             $is_correct = true;
-            $noteUser = $noteUser + 1;
+            $noteUser <= $countQuestions ? $noteUser++ : null;
           }
           // echo '<pre>';
           //   echo '------ autre & many reponse ------- <br>';
@@ -234,7 +234,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["submit"]) {
         foreach($moreResponses as $response){
           if($response === strtolower(trim($userAnswer->correct_answer))){
             $is_correct = true;
-            $noteUser = $noteUser + 1;
+            $noteUser <= $countQuestions ? $noteUser++ : null;
           }
         }
         // echo '<pre>';
@@ -247,7 +247,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["submit"]) {
       }else{
         if(strtolower($r) === strtolower(trim($userAnswer->correct_answer))){
           $is_correct = true;
-          $noteUser = $noteUser + 1;
+          $noteUser <= $countQuestions ? $noteUser++ : null;
         }
         // echo '<pre>';
         //   echo '<br> ------ autre & any reponse ------- <br>';
@@ -265,6 +265,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["submit"]) {
     $pdo->query($sql);
   }
 
+  if($noteUser > $countQuestions ){
+    $noteUser = $countQuestions;
+  }
   $sql = "INSERT INTO gfc_user_result_quiz 
             ( `quiz_id`, `dossier_id`, `note`, `total_note`, `date`) 
     VALUES ('{$_GET['quiz_id']}', '$dossier->id',$noteUser,$countQuestions, NOW())";

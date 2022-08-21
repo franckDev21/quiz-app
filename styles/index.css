@@ -2,6 +2,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  list-style: none;
 }
 
 .logo-text {
@@ -26,11 +27,27 @@ i.btn-delete {
   transform: translateY(2px);
 }
 
+.list-group-item.inline {
+  display: inline !important;
+}
+
 .line {
   width: 100%;
   height: 1px;
   background-color: #ccc;
   margin: 1rem 0;
+}
+
+.list-group-item-bold > span.title {
+  font-weight: bold;
+}
+
+.link-custum {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0.4rem;
+  border: 0.4px solid #eee;
 }
 
 .response-div {
@@ -47,4 +64,13 @@ i.btn-delete {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+.main .header-title .title--span {
+  color: rgba(30, 143, 255, 0.667);
+}
+
+.title-b {
+  border-bottom: 0.4rem rgba(30, 114, 198, 0.824) solid !important;
+  color: rgba(30, 114, 198, 0.824);
+  background-color: #fff !important;
 }/*# sourceMappingURL=index.css.map */

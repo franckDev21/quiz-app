@@ -37,6 +37,7 @@
         <div class="navbar-nav">
           <a class="nav-link active" aria-current="page" href="../../../pages/admin/quiz/index.php">Quiz</a>
           <a class="nav-link" href="../../../pages/admin/questions/index.php">Questions</a>
+          <!-- <a class="nav-link" href="../../../pages/admin/result/index.php">Resultat quiz </a> -->
         </div>
       </div>
     </div>

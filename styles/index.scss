@@ -2,6 +2,7 @@
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+  list-style: none;
 }
 
 .logo-text{
@@ -28,11 +29,31 @@ i{
   }
 }
 
+.list-group-item{
+  &.inline{
+    display: inline !important;
+  }
+}
+
 .line{
   width: 100%;
   height: 1px;
   background-color: #ccc;
   margin: 1rem 0;
+}
+
+.list-group-item-bold{
+  & > span.title{
+    font-weight: bold;
+  }
+}
+
+.link-custum{
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: .4rem;
+  border: .4px solid #eee;
 }
 
 .response-div{
@@ -51,7 +72,17 @@ i{
       display: flex;
       justify-content: space-between;
       align-items: center;
+
+      &--span{
+        color: rgba(30, 143, 255, 0.667);
+      }
     }
    
   }
+}
+
+.title-b{
+  border-bottom: .4rem rgba(30, 114, 198, 0.824) solid !important;
+  color: rgba(30, 114, 198, 0.824) ;
+  background-color: #fff !important;
 }
