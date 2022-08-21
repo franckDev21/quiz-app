@@ -259,18 +259,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["submit"]) {
       }
     }
 
-    // $sql = "INSERT INTO gfc_user_answers 
-    //         ( `quiz_id`, `dossier_id`, `question`, `answer`, `date`,`is_correct`) 
-    // VALUES ('{$_GET['quiz_id']}', '$dossier->id', \"$q\", \"$r\", NOW(),'$is_correct')";
-    // $pdo->query($sql);
+    $sql = "INSERT INTO gfc_user_answers 
+            ( `quiz_id`, `dossier_id`, `question`, `answer`, `date`,`is_correct`) 
+    VALUES ('{$_GET['quiz_id']}', '$dossier->id', \"$q\", \"$r\", NOW(),'$is_correct')";
+    $pdo->query($sql);
   }
 
-  // $sql = "INSERT INTO gfc_user_result_quiz 
-  //           ( `quiz_id`, `dossier_id`, `note`, `total_note`, `date`) 
-  //   VALUES ('{$_GET['quiz_id']}', '$dossier->id',$noteUser,$countQuestions, NOW())";
-  // $pdo->query($sql);
-  var_dump($noteUser);
-  exit;
+  $sql = "INSERT INTO gfc_user_result_quiz 
+            ( `quiz_id`, `dossier_id`, `note`, `total_note`, `date`) 
+    VALUES ('{$_GET['quiz_id']}', '$dossier->id',$noteUser,$countQuestions, NOW())";
+  $pdo->query($sql);
+
 
   $success = true;
 
