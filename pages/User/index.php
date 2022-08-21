@@ -46,14 +46,17 @@ foreach ($questions as $k => $question) {
     'question' => $question->question,
     'is_requered' => $question->is_requered,
     'correct_answer' => $question->correct_answer,
+    'is_more_answers' => $question->is_more_answers,
     'answers' => (trim($question->answers) !== null || trim($question->answers) !== '') ? unserialize(trim($question->answers)) : (object)[]
   ];
 }
 
 $questions = $newQuestions;
-echo '<pre>';
-print_r($questions);
-echo '</pre>';
+// echo '------------ questions ----------';
+// echo '<pre>';
+// print_r($questions);
+// echo '</pre>';
+// echo '------------ questions ----------';
 
 if (
   $_SERVER['REQUEST_METHOD'] === 'POST' &&
@@ -88,9 +91,9 @@ function test_input($data)
 # define variables and set to empty values
 if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["submit"]) {
 
-  echo '<pre>';
-  print_r($_POST);
-  echo '</pre>';
+  // echo '<pre>';
+  // print_r($_POST);
+  // echo '</pre>';
 
   $_SESSION['rainbow_uid'] = 1; // to be modified after
 
@@ -109,13 +112,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["submit"]) {
 
   # Recording of the student's answers 
   $userAnswers = [];
+  $countQuestions = count($questions);
+  $noteUser = 0;
 
   foreach ($questions as $qIndex => $question) {
     $value = null;
-    if (is_array($_POST["question$qIndex"])) {
-      $value = implode(', ', array_map('test_input', $_POST["question$qIndex"]));
-    } else {
-      $value = test_input($_POST["question$qIndex"]);
+    
+    if(isset($_POST["question$qIndex"])){
+      if (is_array($_POST["question$qIndex"])) {
+        $value = implode(', ', array_map('test_input', $_POST["question$qIndex"]));
+      } else {
+        $value = test_input($_POST["question$qIndex"]);
+      }
+    }else{
+      $value = '';
     }
 
     $userAnswers[] = (object)[
@@ -123,20 +133,144 @@ if ($_SERVER["REQUEST_METHOD"] === "POST" && $_POST["submit"]) {
       "answer" => $value,
       "type" => $question->type,
       "correct_answer" => $question->correct_answer,
+      "is_more_answers" => $question->is_more_answers,
     ];
   }
 
   // echo '<pre>';
   // print_r($userAnswers);
   // echo '</pre>';
-  // exit;
+
+  /**
+   * on devrais peut être monbre_minimun_reponse_juste dans la table question et lorsqu'on choisie 'checkbox' || 'Choix multiple'
+   * et faire apparaitre un input qui prend cette valeur
+   * 
+   * cette monbre_minimun_reponse_juste poura être use lorsqu'on corrige un quiz que l'edudiant repond
+   */
+  // verifier s'il y'a plusieur reponse possible a la question (is_more_answers === true || (is_more_answers === false))
+    // si oui
+        # verifier si le type de la question est checkbox (plusieurs reponses)
+          // si oui 
+            // verifier si au moins une des valeurs coché === se trouve dans le tab des reponse possible ( s'il y'avais 'monbre_minimun_reponse_juste' , on devais s'appuyer dessus)
+              // si oui 
+                // is_correct === true
+              // si non 
+                // is_correct === false
+          // si non
+            // verifier si la reponse du user se trouve dans l'ensemble des choix possibles
+              // si oui 
+                // doit mettre la prop is_correct a true
+              // si non 
+                // a is_correct === false
+    // si non
+        # verifier si le type de la question est checkbox (plusieurs reponses)
+          // si oui
+            // verifier si au moins une des valeurs coché === reponse attendue
+              // si oui 
+                // is_correct === true
+              // si non 
+                // is_correct === false
+          // sinon
+            // verifier si reponse === reponse attendu
+              // si oui 
+                // is_correct === true
+              // si non 
+                // is_correct === false
+
+
 
   foreach ($userAnswers as $userAnswer) {
     $q = $userAnswer->question;
     $r = $userAnswer->answer;
-    $sql = "INSERT INTO gfc_user_answers ( `quiz_id`, `dossier_id`, `question`, `answer`, `date`) VALUES ('{$_GET['quiz_id']}', '$dossier->id', \"$q\", \"$r\", NOW())";
-    $pdo->query($sql);
+    $is_correct = false;
+
+    if($userAnswer->is_more_answers === 1){
+      $moreResponses = trim($userAnswer->correct_answer) === '' ? $userAnswer->correct_answer : unserialize($userAnswer->correct_answer);
+      $moreResponsesUser = null;
+      if(is_array($moreResponses)){
+        // transformer toutes les valeurs du tab reponse en minuscule
+        foreach($moreResponses as $k => $response){
+          $moreResponses[$k] = strtolower($response);
+        }
+        if($userAnswer->type === 'checkbox'){
+          $moreResponsesUser = explode(',',$userAnswer->answer);
+          foreach($moreResponsesUser as $k => $response){
+            $moreResponsesUser[$k] = strtolower(trim(trim($response)));
+          }
+          foreach($moreResponsesUser as $response){
+            if(in_array($response,$moreResponses)){
+              $is_correct = true;
+              $noteUser = $noteUser + 1;
+            }
+          }
+          // echo '<pre>';
+          //   echo '------ checkbox & many reponse ------- <br>';
+          //   var_dump($is_correct);
+          //   print_r($moreResponsesUser);
+          //   print_r($moreResponses);
+          //   echo '<br> ------ checkbox & many reponse ------- <br>';
+          // echo '</pre>';
+        }else{
+          if(in_array(strtolower($r),$moreResponses)){
+            $is_correct = true;
+            $noteUser = $noteUser + 1;
+          }
+          // echo '<pre>';
+          //   echo '------ autre & many reponse ------- <br>';
+          //   var_dump($is_correct);
+          //   print_r($moreResponsesUser);
+          //   print_r($moreResponses);
+          //   print_r($r);
+          //   echo '<br> ------ autre & many reponse -------';
+          // echo '</pre>';
+        }
+      }
+    }else{
+      if($userAnswer->type === 'checkbox'){
+        $moreResponses = explode(',',$userAnswer->answer);
+        foreach($moreResponses as $k => $response){
+          $moreResponses[$k] = strtolower(trim(trim($response)));
+        }
+        foreach($moreResponses as $response){
+          if($response === strtolower(trim($userAnswer->correct_answer))){
+            $is_correct = true;
+            $noteUser = $noteUser + 1;
+          }
+        }
+        // echo '<pre>';
+        //   echo '<br> ------ checkbox & any reponse ------- <br>';
+        //   var_dump($is_correct);
+        //   print_r($moreResponses);
+        //   print_r($userAnswer->correct_answer);
+        //   echo '<br> ------ checkbox & any reponse ------- <br>';
+        // echo '</pre>';
+      }else{
+        if(strtolower($r) === strtolower(trim($userAnswer->correct_answer))){
+          $is_correct = true;
+          $noteUser = $noteUser + 1;
+        }
+        // echo '<pre>';
+        //   echo '<br> ------ autre & any reponse ------- <br>';
+        //   var_dump($is_correct);
+        //   print_r($userAnswer->correct_answer);
+        //   print_r($r);
+        //   echo '<br> ------ autre & any reponse ------- <br>';
+        // echo '</pre>';
+      }
+    }
+
+    // $sql = "INSERT INTO gfc_user_answers 
+    //         ( `quiz_id`, `dossier_id`, `question`, `answer`, `date`,`is_correct`) 
+    // VALUES ('{$_GET['quiz_id']}', '$dossier->id', \"$q\", \"$r\", NOW(),'$is_correct')";
+    // $pdo->query($sql);
   }
+
+  // $sql = "INSERT INTO gfc_user_result_quiz 
+  //           ( `quiz_id`, `dossier_id`, `note`, `total_note`, `date`) 
+  //   VALUES ('{$_GET['quiz_id']}', '$dossier->id',$noteUser,$countQuestions, NOW())";
+  // $pdo->query($sql);
+  var_dump($noteUser);
+  exit;
 
   $success = true;
 
