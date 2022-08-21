@@ -97,7 +97,7 @@ require_once('../../../layouts/Header/index_admin.php') ?>
           <td><?= htmlentities($question->date) ?></td>
           <td>
             <a href="./result.php?dossier_id=<?= $question->dossier_id ?>&quiz_id=<?= $question->quiz_id ?>" class="btn btn-sm btn-info"><i class="fa-solid fa-eye"></i></a>
-            <a onclick="return confirm('Voulez vous vraiment supprimer ?')" href="./delete.php?id=<?= $question->id ?>" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></a>
+            <!-- <a onclick="return confirm('Voulez vous vraiment supprimer ?')" href="./delete.php?id=<?= $question->id ?>" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></a> -->
           </td>
         </tr>
       <?php endforeach ?>
