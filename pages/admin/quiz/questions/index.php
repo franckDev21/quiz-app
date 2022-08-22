@@ -45,7 +45,7 @@ require_once('../../../../layouts/Header/index_admin.php') ?>
     <h2 class="title card-header d-flex align-items-center justify-content-between">
       <span>Gestion des questions <span class="text-primary"><?= $quiz ? "| ".$quiz->name:'' ?></span></span>
 
-      <a href="../../questions/create.php" class="btn btn-primary">
+      <a href="../../questions/create.php?quiz_id=<?= $_GET['quiz_id'] ?>" class="btn btn-primary">
         Ajouter un question
       </a>
     </h2>

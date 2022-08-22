@@ -121,7 +121,7 @@
 <div class="container main mt-4">
   <div class="header-title card">
     <h2 class="title card-header">
-      <span>Création d'une question </span>
+      <span>Création d'une question <span class="text-primary"><?= $quiz ? "| ".$quiz->name:'' ?></span></span>
 
       <a href="./" class="btn btn-secondary">
         Retour a la page d'accueil
@@ -137,19 +137,12 @@
         <div class="col-md-6">
           <div class="mb-3">
             <label for="quiz" class="form-label">Quiz *</label>
-            <?php if($quiz): ?>
-              <div class="form-control">
-                <input type="text" hidden name='quiz_id' value="<?= $quiz->id ?>">
-                <?= $quiz->name ?>
-              </div>
-            <?php else: ?>
-              <select required name="quiz_id" id="quiz" class="form-control">
-                <option value=""> - Choisissez le quiz de la question -</option>
-                <?php foreach($quizs as $quiz): ?>
-                  <option <?= $quizForQuestion->name === $quiz->name ? 'selected':'' ?> value="<?= $quiz->id ?>"><?= $quiz->name ?></option>
-                <?php endforeach ?>
-              </select>
-            <?php endif ?>
+            <select required name="quiz_id" id="quiz" class="form-control">
+              <option value=""> - Choisissez le quiz de la question -</option>
+              <?php foreach($quizs as $quiz): ?>
+                <option value="<?= $quiz->id ?>"><?= $quiz->name ?></option>
+              <?php endforeach ?>
+            </select>
           </div>
         </div>
         <div class="col-md-6">
