@@ -35,8 +35,21 @@
       </button>
       <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
         <div class="navbar-nav">
-          <a class="nav-link active" aria-current="page" href="../../../pages/admin/quiz/index.php">Quiz</a>
-          <a class="nav-link" href="../../../pages/admin/questions/index.php">Questions</a>
+          <a class="nav-link active" aria-current="page" 
+            <?php if(isset($quiz)): ?>
+              href="../../../../pages/admin/quiz/index.php"
+            <?php else: ?>
+              href="../../../pages/admin/quiz/index.php"
+            <?php endif ?>
+            
+          >Quiz</a>
+          <a class="nav-link" 
+            <?php if(isset($quiz)): ?>
+              href="../../../../pages/admin/questions/index.php"
+            <?php else: ?>
+              href="../../../pages/admin/questions/index.php"
+            <?php endif ?>
+          >Questions</a>
           <!-- <a class="nav-link" href="../../../pages/admin/result/index.php">Resultat quiz </a> -->
         </div>
       </div>

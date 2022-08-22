@@ -46,6 +46,7 @@ require_once('../../../layouts/Header/index_admin.php') ?>
               <a href="./update.php?id=<?= $quiz->id ?>" class="btn btn-sm btn-info"><i class="fa-solid fa-eye"></i></a>
               <a onclick="return confirm('Voulez vous vraiment supprimer ?')" href="./delete.php?id=<?= $quiz->id ?>" class="btn btn-sm btn-danger"><i class="fa-solid fa-trash"></i></a>
               <a href="../result/index.php?quiz_id=<?= $quiz->id ?>" class="btn btn-sm btn-secondary">Dossiers</a>
+              <a href="./questions/index.php?quiz_id=<?= $quiz->id ?>" class="btn btn-sm btn-warning">Questions</a>
             </td>
           </tr>
         <?php endforeach ?>

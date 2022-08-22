@@ -39,6 +39,8 @@ try {
 
 $questions_user = $statement->fetchAll();
 
+$userAnswers = [];
+
 foreach($questions_user as $k => $question){
   $query = $pdo->prepare("SELECT * FROM gfc_user_answers WHERE quiz_id = :quiz_id AND dossier_id = :dossier_id");
   $query->execute([
