@@ -20,6 +20,7 @@ if(isset($_GET['quiz_id'])){
   }
 }
 
+
   ##  verifier le role du user
 
   function test_input_value($data){
@@ -57,7 +58,7 @@ if(isset($_GET['quiz_id'])){
     'id' => $question->quiz_id
   ]);
   $quizForQuestion = $statementQuizQuestion->fetch();
-
+  $quiz = $quizForQuestion;
   $suggetions = $question->answers;
   $responses = $question->correct_answer;
   
@@ -202,16 +203,15 @@ if(isset($_GET['quiz_id'])){
                 <?php endforeach ?>
               </select>
             <?php endif ?>
-            
           </div>
         </div>
         <div class="col-md-6">
           <div class="mb-3">
-            <label for="type" class="form-label">Choisissez un type a cette question</label>
+            <label for="type" class="form-label">Choisissez le type de la question</label>
             <select required name="type" id="type" class="form-control">
               <option value=""> - type de question -</option>
               <?php foreach($types as $type): ?>
-                <option <?= htmlentities($question->type) === htmlentities($type->name) ? 'selected':'' ?> value="<?= htmlentities($type->name) ?>"><?= $type->name ?></option>
+                <option <?= htmlentities($question->type) === htmlentities($type->name) ? 'selected':'' ?> value="<?= htmlentities($type->name) ?>"><?= $type->display_name ?></option>
               <?php endforeach ?>
             </select>
           </div>

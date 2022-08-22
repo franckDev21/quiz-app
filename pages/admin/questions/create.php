@@ -1,6 +1,26 @@
 <?php 
   include('../../../db/connexion.php');
 
+  
+  $quiz = null;
+  // We check if there is a quiz id in parameter 
+  if(isset($_GET['quiz_id'])){
+    try {
+      $statement = $pdo->prepare('SELECT * FROM gfc_quizs WHERE id = :id');
+      $statement->execute([
+        'id' => $_GET['quiz_id']
+      ]);
+    } catch (\PDOException $e) {
+      die('ERREUR SQL : ' . $e->getMessage());
+    }
+    $quiz = $statement->fetch();
+  }
+  
+  if(!$quiz){
+    http_response_code(403);
+    exit;
+  }
+
   ##  verifier le role du user
 
   function test_input_value($data){
@@ -117,17 +137,24 @@
         <div class="col-md-6">
           <div class="mb-3">
             <label for="quiz" class="form-label">Quiz *</label>
-            <select required name="quiz_id" id="quiz" class="form-control">
-              <option value=""> - Choisissez le quiz de la question -</option>
-              <?php foreach($quizs as $quiz): ?>
-                <option value="<?= $quiz->id ?>"><?= $quiz->name ?></option>
-              <?php endforeach ?>
-            </select>
+            <?php if($quiz): ?>
+              <div class="form-control">
+                <input type="text" hidden name='quiz_id' value="<?= $quiz->id ?>">
+                <?= $quiz->name ?>
+              </div>
+            <?php else: ?>
+              <select required name="quiz_id" id="quiz" class="form-control">
+                <option value=""> - Choisissez le quiz de la question -</option>
+                <?php foreach($quizs as $quiz): ?>
+                  <option <?= $quizForQuestion->name === $quiz->name ? 'selected':'' ?> value="<?= $quiz->id ?>"><?= $quiz->name ?></option>
+                <?php endforeach ?>
+              </select>
+            <?php endif ?>
           </div>
         </div>
         <div class="col-md-6">
           <div class="mb-3">
-            <label for="type" class="form-label">Choisissez un type a cette question</label>
+            <label for="type" class="form-label">Choisissez le type de la question</label>
             <select required name="type" id="type" class="form-control">
               <option value=""> - type de question -</option>
               <?php foreach($types as $type): ?>
