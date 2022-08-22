@@ -147,7 +147,7 @@
         </div>
         <div class="col-md-6">
           <div class="mb-3 pt-4 d-flex justify-content-between align-items-center">
-            <label for="required" class="form-label">Question obligartoire ?</label>
+            <label for="required" class="form-label">Question obligatoire ?</label>
             <input style="width: 20px; height:20px" name="required" type="checkbox" id="required" >
           </div>
         </div>
